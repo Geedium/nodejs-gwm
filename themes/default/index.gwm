@@ -5,7 +5,27 @@
     </Head>
     <Context>
         <div id="root">Hello world!</div>
+        <button onclick="navigate('about')">About</button>
+        <button onclick="navigate('news')">News</button>
         <script>
+            import axios from 'axios';
+
+            function navigate(pageName) {
+                // axios.get(`/${pageName}`, {
+                //    headers: {
+                //        'Content-Type': 'text/html'
+                //    }
+                // }).then(res => res.data).then(data => {
+                //     // const html = document.createElement('template');
+                //     // html.innerHTML = data;
+                //     // const match = data.match(/(?:<body>)([\s\S]*)(?:<\/body>)/);
+                //     // document.body.innerHTML = match[0];
+                // })
+                window.history.pushState(null, null, `/${pageName}`);
+                // window.location.pathname = `/${pageName}`;
+                document.getElementById('root').innerHTML = pageName;
+            }
+
             window.onload = function() {
                 setTimeout(function() {
                  document.getElementById('root').innerHTML = `Clicks: ${DATA.clicks}`;

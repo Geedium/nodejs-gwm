@@ -62,10 +62,16 @@ const justInTimeInterpreter = (data, indents = 0) => {
 
   const match = data.match(/(?:<Head>)([\s\S]*)(?:<\/Head>)/);
 
+  // Extract imports
+  const im = data.match(/import [a-z]+ [a-z]+ '\w+';/);
+  data = data.replace(im, "");
+
   let _head = "<head>";
   for (var i = 0; i < head.length; i++) {
     _head += head[i];
   }
+  _head +=
+    '<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>';
   _head += "</head>";
 
   data = data.replace(match[0], _head);
