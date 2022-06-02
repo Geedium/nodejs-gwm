@@ -1,0 +1,16 @@
+<Html>
+    <Head>
+        <meta name="viewport" content="width=device-width, initial-view=1" />
+        <MaterialStyles />
+    </Head>
+    <Context>
+        <div id="root">Hello world!</div>
+        <script>
+            window.onload = function() {
+                setTimeout(function() {
+                 document.getElementById('root').innerHTML = `Clicks: ${DATA.clicks}`;
+                }, 1000)
+            }
+        </script>
+    </Context>
+</Html>
