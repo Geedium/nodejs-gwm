@@ -2,6 +2,9 @@
   "name": "@geedium-org/nodejs-gwm",
   "version": "0.0.3",
   "module": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "scripts": {
     "build": "tsc"
