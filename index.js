@@ -40,6 +40,109 @@ class AppContext {
   }
 }
 
+const stripComments = (code) => {
+  const savedText = [];
+  return (
+    code
+      // extract strings and regex
+      .replace(/(['"`]).*?\1/gm, function (match) {
+        savedText.push(match);
+        return "###";
+      })
+      // remove  // comments
+      .replace(/\/\/.*/gm, "")
+      // now extract all regex and save them
+      .replace(/\/[^*\n].*\//gm, function (match) {
+        savedText.push(match);
+        return "###";
+      })
+      // remove /* */ comments
+      .replace(/\/\*[\s\S]*\*\//gm, "")
+      // remove <!-- --> comments
+      .replace(/<!--[\s\S]*-->/gm, "")
+      /*replace \ with \\ so we not lost \b && \t*/
+      .replace(/###/gm, function () {
+        return savedText.shift();
+      })
+  );
+};
+
+const __require = (data) => {
+  const matches = data.match(/require\('.*'\);/gm);
+
+  if (!matches || matches.length <= 0) {
+    return false;
+  }
+
+  for (match of matches) {
+    const x = match.replace("require(", "");
+    const y = x.replace(");", "");
+    let c = y.replaceAll("'", "");
+    c = path.resolve(c);
+
+    const x2 = fs.existsSync(c);
+    if (!x2) {
+      c += ".js";
+    } else {
+      // console.log("Something exists!");
+      // const isFile = fs.lstatSync(c).isFile();
+      // if(isFile) {
+      // }
+    }
+
+    const moduleDir = process.cwd();
+
+    const f = c.split("\\");
+    const f2 = moduleDir.split("\\");
+
+    //  symmetric difference
+    let difference = f
+      .filter((x) => !f2.includes(x))
+      .concat(f2.filter((x) => !f.includes(x)));
+
+    difference = difference.filter(function (value) {
+      return !value.includes(".");
+    });
+
+    const finalDir = path.join(moduleDir, ...difference);
+    process.chdir(finalDir);
+
+    var _data = __require(fs.readFileSync(c, "utf8"));
+
+    data = data.replace(match, _data);
+    return data;
+  }
+
+  return data;
+};
+
+const transpileJs = (moduleName) => {
+  const cwd = path.resolve(__dirname, "node_modules", moduleName);
+
+  process.chdir(cwd);
+  console.log("Working directory: ", process.cwd());
+
+  const entryFile = require(path.resolve(cwd, "package.json")).main;
+
+  var index = fs.readFileSync(path.resolve(cwd, entryFile), "utf8");
+
+  var transpiled = __require(index);
+
+  // remove unnecessary comments
+  transpiled = stripComments(transpiled);
+
+  // // remove top level entries
+  transpiled = transpiled.replaceAll("'use strict';", "");
+
+  // // remove module exports from commonJS
+  const matches = transpiled.match(/module.exports = .*$/gm);
+  for (match of matches) {
+    transpiled = transpiled.replace(match, "");
+  }
+
+  return transpiled;
+};
+
 const justInTimeInterpreter = (data, indents = 0) => {
   console.time("Interpreter");
 
@@ -66,12 +169,15 @@ const justInTimeInterpreter = (data, indents = 0) => {
   const im = data.match(/import [a-z]+ [a-z]+ '\w+';/);
   data = data.replace(im, "");
 
+  const axios = transpileJs("axios");
+
   let _head = "<head>";
   for (var i = 0; i < head.length; i++) {
     _head += head[i];
   }
-  _head +=
-    '<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>';
+  _head += "<script>" + axios + "</script>";
+  // _head +=
+  //   '<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>';
   _head += "</head>";
 
   data = data.replace(match[0], _head);

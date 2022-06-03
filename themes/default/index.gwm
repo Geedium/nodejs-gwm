@@ -16,6 +16,7 @@
                 //        'Content-Type': 'text/html'
                 //    }
                 // }).then(res => res.data).then(data => {
+                //     console.log(data);
                 //     // const html = document.createElement('template');
                 //     // html.innerHTML = data;
                 //     // const match = data.match(/(?:<body>)([\s\S]*)(?:<\/body>)/);
