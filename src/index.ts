@@ -1,13 +1,20 @@
-const http = require("http");
-const fs = require("fs");
-const path = require("path");
+import * as http from 'http';
+import * as fs from 'fs';
 
-const host = "localhost";
-const port = 3000;
+import * as path from 'path';
+
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.resolve(path.dirname(__filename), '..');
+
+const host: string = "localhost";
+const port: number = 3000;
+
+import * as crypto from 'crypto';
 
 // const __dirname = path.resolve();
 
-const crypto = require("crypto");
 const algorithm = "aes-256-cbc"; //Using AES encryption
 const key = crypto.randomBytes(32);
 const iv = crypto.randomBytes(16);
@@ -74,7 +81,7 @@ const __require = (data) => {
     return false;
   }
 
-  for (match of matches) {
+  for (var match of matches) {
     const x = match.replace("require(", "");
     const y = x.replace(");", "");
     let c = y.replaceAll("'", "");
@@ -136,7 +143,7 @@ const transpileJs = (moduleName) => {
 
   // // remove module exports from commonJS
   const matches = transpiled.match(/module.exports = .*$/gm);
-  for (match of matches) {
+  for (var match of matches) {
     transpiled = transpiled.replace(match, "");
   }
 
@@ -176,8 +183,8 @@ const justInTimeInterpreter = (data, indents = 0) => {
     _head += head[i];
   }
   // _head += "<script>" + axios + "</script>";
-  // _head +=
-  //   '<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>';
+  _head +=
+    '<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>';
   _head += "</head>";
 
   data = data.replace(match[0], _head);
@@ -202,6 +209,7 @@ const justInTimeInterpreter = (data, indents = 0) => {
     "<Context>",
     `<body>${body.trim()}<script>DATA = ${AppContext.print()};`.trim()
   );
+
   data = data.replace("</Context>", `</script></body>`);
 
   data = data.replace("</Html>", "</html>");
@@ -242,6 +250,7 @@ const aboutPage = (req, res) => {
 
       const content = justInTimeInterpreter(data);
       console.timeEnd("Interpreter");
+      res.setHeader('Content-Type', 'text/html');
       res.writeHead(200);
       res.end(content);
     }
@@ -261,6 +270,27 @@ const indexPage = (req, res) => {
 
       const content = justInTimeInterpreter(data);
       console.timeEnd("Interpreter");
+      res.setHeader('Content-Type', 'text/html');
+      res.writeHead(200);
+      res.end(content);
+    }
+  );
+};
+
+const newsPage = (req, res) => {
+  fs.readFile(
+    path.resolve(__dirname, "themes/default/news.gwm"),
+    "utf8",
+    (err, data) => {
+      if (err) {
+        res.writeHead(404);
+        res.end("<html><body>Page not found!</body></html>");
+        return;
+      }
+
+      const content = justInTimeInterpreter(data);
+      console.timeEnd("Interpreter");
+      res.setHeader('Content-Type', 'text/html');
       res.writeHead(200);
       res.end(content);
     }
@@ -277,13 +307,17 @@ const requestListener = function (req, res) {
     case "/about":
       aboutPage(req, res);
       break;
+    case '/news':
+      newsPage(req, res);
+      break;
     default:
+      res.setHeader('Content-Type', 'text/html');
       res.writeHead(404);
       res.end("<html><body>Page not found!</body></html>");
   }
 };
 
-class Application {
+export default class Application {
   static _instance = null;
 
   static create() {
@@ -314,4 +348,3 @@ class Application {
 
 Application.listen(host, port);
 
-module.exports = Application;

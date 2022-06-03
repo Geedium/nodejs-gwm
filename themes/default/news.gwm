@@ -4,7 +4,7 @@
         <MaterialStyles />
     </Head>
     <Context>
-        <div id="root">Hello world!</div>
+        <div id="root">News feed...</div>
         <button onclick="navigate('')">Home Page</button>
         <button onclick="navigate('about')">About</button>
         <button onclick="navigate('news')">News</button>
@@ -14,9 +14,9 @@
 
             function navigate(pageName) {
                 axios.get(`/${pageName}`, {
-                headers: {
-                    'Content-Type': 'text/xml'
-                }
+                   headers: {
+                       'Content-Type': 'text/xml'
+                   }
                 }).then(res => res.data).then(data => {
                     const parser = new DOMParser();
                     const xmlDoc = parser.parseFromString(data, "text/html");
