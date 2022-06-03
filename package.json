@@ -1,6 +1,6 @@
 {
   "name": "@geedium-org/nodejs-gwm",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "module": "dist/index.js",
   "files": [
     "dist"
