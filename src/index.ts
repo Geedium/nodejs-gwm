@@ -237,9 +237,17 @@ const justInTimeInterpreter = (data, indents = 0) => {
   return data;
 };
 
-const aboutPage = (req, res) => {
+const rootRender = (filename: string, req: any, res: any) => {
+  const appPath = path.dirname(process.argv[1]);
+  const parentDir = path.dirname(appPath);
+  const isParentDirRoot = path.basename(appPath) === 'dist';
+
+  render(path.resolve(isParentDirRoot ? parentDir : appPath, filename), req, res);
+};
+
+const render = (filename: string, req: any, res: any) => {
   fs.readFile(
-    path.resolve(__dirname, "themes/default/about.gwm"),
+    filename,
     "utf8",
     (err, data) => {
       if (err) {
@@ -257,48 +265,30 @@ const aboutPage = (req, res) => {
   );
 };
 
-const indexPage = (req, res) => {
-  fs.readFile(
-    path.resolve(__dirname, "themes/default/index.gwm"),
-    "utf8",
-    (err, data) => {
-      if (err) {
-        res.writeHead(404);
-        res.end("<html><body>Page not found!</body></html>");
-        return;
-      }
-
-      const content = justInTimeInterpreter(data);
-      console.timeEnd("Interpreter");
-      res.setHeader('Content-Type', 'text/html');
-      res.writeHead(200);
-      res.end(content);
-    }
-  );
+const aboutPage = (req: any, res: any) => {
+  render(path.resolve(__dirname, "themes/default/about.gwm"), req, res);
 };
 
-const newsPage = (req, res) => {
-  fs.readFile(
-    path.resolve(__dirname, "themes/default/news.gwm"),
-    "utf8",
-    (err, data) => {
-      if (err) {
-        res.writeHead(404);
-        res.end("<html><body>Page not found!</body></html>");
-        return;
-      }
+const indexPage = (req: any, res: any) => {
+  render(path.resolve(__dirname, "themes/default/index.gwm"), req, res);
+};
 
-      const content = justInTimeInterpreter(data);
-      console.timeEnd("Interpreter");
-      res.setHeader('Content-Type', 'text/html');
-      res.writeHead(200);
-      res.end(content);
-    }
-  );
+const newsPage = (req: any, res: any) => {
+  render(path.resolve(__dirname, "themes/default/news.gwm"), req, res);
 };
 
 const requestListener = function (req, res) {
   console.log(`i [${req.method}]: ${req.url}`);
+
+  for (var route of Application.routes) {
+    const equalMethod = req.method.toUpperCase() === route.method.toUpperCase();
+
+    if (equalMethod && req.url === route.routename) {
+      res.render = render;
+      res.rootRender = rootRender;
+      return route.callback(req, res);
+    }
+  }
 
   switch (req.url) {
     case "/":
@@ -319,10 +309,19 @@ const requestListener = function (req, res) {
 
 export default class Application {
   static _instance = null;
+  static routes = [];
 
   static create() {
     // Application._instance = new Application();
     // return Application._instance;
+  }
+
+  static get(path: string, callback: (req, res) => void) {
+    Application.routes.push({
+      routename: path,
+      method: 'get',
+      callback
+    })
   }
 
   static listen(host, port) {
@@ -343,8 +342,13 @@ export default class Application {
   }
 }
 
+// Application.get('/a', (req, res) => {
+//   res.rootRender('themes/default/about.gwm', req, res);
+// });
+
+// console.log(Application.routes);
+
 // const app = Application.create();
 // console.log(app);
 
-Application.listen(host, port);
-
+// Application.listen(host, port);
