@@ -169,13 +169,13 @@ const justInTimeInterpreter = (data, indents = 0) => {
   const im = data.match(/import [a-z]+ [a-z]+ '\w+';/);
   data = data.replace(im, "");
 
-  const axios = transpileJs("axios");
+  // const axios = transpileJs("axios");
 
   let _head = "<head>";
   for (var i = 0; i < head.length; i++) {
     _head += head[i];
   }
-  _head += "<script>" + axios + "</script>";
+  // _head += "<script>" + axios + "</script>";
   // _head +=
   //   '<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>';
   _head += "</head>";
@@ -277,6 +277,6 @@ class Application {
 // const app = Application.create();
 // console.log(app);
 
-Application.listen(host, port);
+// Application.listen(host, port);
 
 module.exports = Application;
