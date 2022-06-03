@@ -3,6 +3,9 @@ import * as fs from 'fs';
 
 import * as path from 'path';
 
+import cluster from 'node:cluster';
+import { cpus } from 'node:os';
+
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -330,11 +333,27 @@ export default class Application {
     //   return false;
     // }
 
-    const server = http.createServer(requestListener);
-    server.listen(port, host, () => {
-      console.log(`i Server is running on http://${host}:${port}`);
-      // return Application._instance;
-    });
+    const numCPUs = cpus().length;
+    console.log('i Number of CPUs detected: ', numCPUs);
+
+    if (cluster.isPrimary) {
+      console.log(`i Primary ${process.pid} is running`);
+
+      // Fork workers
+      for (let i = 0; i < numCPUs; i++) {
+        cluster.fork();
+      }
+
+      cluster.on('exit', (worker, code, signal) => {
+        console.log(`worker ${worker.process.pid} died`);
+      });
+    } else {
+      const server = http.createServer(requestListener);
+      server.listen(port, host, () => {
+        console.log(`i Server is running on http://${host}:${port}`);
+        // return Application._instance;
+      });
+    }
   }
 
   listen(server) {
