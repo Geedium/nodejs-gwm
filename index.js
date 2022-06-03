@@ -248,7 +248,35 @@ const requestListener = function (req, res) {
   );
 };
 
-const server = http.createServer(requestListener);
-server.listen(port, host, () => {
-  console.log(`Server is running on http://${host}:${port}`);
-});
+class Application {
+  static _instance = null;
+
+  static create() {
+    // Application._instance = new Application();
+    // return Application._instance;
+  }
+
+  static listen(host, port) {
+    // if (!Application._instance) {
+    //   console.error("There is no application instance.");
+    //   return false;
+    // }
+
+    const server = http.createServer(requestListener);
+    server.listen(port, host, () => {
+      console.log(`i Server is running on http://${host}:${port}`);
+      // return Application._instance;
+    });
+  }
+
+  listen(server) {
+    // bind to server
+  }
+}
+
+// const app = Application.create();
+// console.log(app);
+
+Application.listen(host, port);
+
+module.exports = Application;
