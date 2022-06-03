@@ -1,6 +1,6 @@
 {
   "name": "@geedium-org/nodejs-gwm",
-  "version": "0.0.0-dev",
+  "version": "0.0.0",
   "dependencies": {
     "axios": "^0.27.2"
   }
