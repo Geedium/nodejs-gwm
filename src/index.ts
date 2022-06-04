@@ -6,6 +6,8 @@ import * as path from 'path';
 import cluster from 'node:cluster';
 import { cpus } from 'node:os';
 
+import Database from './app/Database.js';
+
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -362,9 +364,10 @@ export default class Application {
 }
 
 // Application.get('/a', (req, res) => {
-//   res.rootRender('themes/default/about.gwm', req, res);
+//   // res.rootRender('themes/default/about.gwm', req, res);
 // });
 
+const db = new Database();
 // console.log(Application.routes);
 
 // const app = Application.create();

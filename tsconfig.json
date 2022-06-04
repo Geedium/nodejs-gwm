@@ -5,8 +5,9 @@
         "module": "ESNext",
         "rootDir": "./src",
         "outDir": "dist",
+        "moduleResolution": "node",
         "types": [
             "node"
-        ]
+        ],
     }
 }
