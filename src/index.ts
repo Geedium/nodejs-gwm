@@ -288,7 +288,31 @@ const requestListener = function (req, res) {
   for (var route of Application.routes) {
     const equalMethod = req.method.toUpperCase() === route.method.toUpperCase();
 
-    if (equalMethod && req.url === route.routename) {
+    const extractParts = req.url.split('/');
+    const routeParts = route.routename.split('/');
+
+    var isMatch = false;
+    for (var i = 0; i < extractParts.length; i++) {
+      if (extractParts.length !== routeParts.length) {
+        continue;
+      }
+
+      if (routeParts[i].startsWith(':')) {
+        const varName = routeParts[i].substring(1, routeParts.length)
+        if (!req.params) {
+          req.params = {};
+        }
+        req.params[varName] = extractParts[i];
+        isMatch = true;
+        continue;
+      }
+
+      if (extractParts[i] !== routeParts[i]) {
+        isMatch = false;
+      }
+    }
+
+    if (equalMethod && (req.url === route.routename || isMatch)) {
       res.render = render;
       res.rootRender = rootRender;
       return route.callback(req, res);
