@@ -1,0 +1,33 @@
+<Html>
+    <Head>
+        <style>
+            .sidebar {
+                width: 100px;
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                background: #272727;
+                border-right: 1px solid rgba(255, 255, 255, 0.12);
+            }
+        </style>
+        <link href="./index.min.css" rel="stylesheet" />
+    </Head>
+    <Context>
+        <div class="sidebar">
+            Hello world!
+            <a href="/">Hello world!</a>
+        </div>
+        <div class="wrap">
+            <button id="name" class="btn">HJWAHFWEABFEWOAFBEWOAFBEWAOF</button>
+            {posts => (
+                <div>{title}</div>
+            )}
+        </div>
+        <script>
+            window.onload = () => {
+                document.getElementById("name").innerHTML = window.DATA.clicks;
+            };
+        </script>
+    </Context>
+</Html>

@@ -40,10 +40,10 @@ function decrypt(text) {
   return decrypted.toString();
 }
 
-class AppContext {
+export class AppContext {
   static state = {};
 
-  static add(key, value) {
+  static add(key: string, value: any) {
     AppContext.state[key] = value;
   }
 
@@ -155,6 +155,118 @@ const transpileJs = (moduleName) => {
   return transpiled;
 };
 
+export const scssInterpreter = (data: string, compressed?: boolean) => {
+  if (typeof data !== 'string') {
+    throw new TypeError("data must be a string");
+  }
+
+  const css = data.replaceAll("\r", "").split('\n');
+
+  var blocks = {};
+  var following = false;
+  var identifier = "";
+  var nestedIdentifier = "";
+
+  for (const line of css) {
+    if (line == "" || line.length <= 0) {
+      continue;
+    }
+
+    const icss = line.trim();
+
+    const isStart = icss.includes("{") && !icss.includes("&");
+    const isNested = icss.includes("{") && icss.includes("&");
+    const isEnd = icss.includes("}");
+
+    if (following && !isStart && !isEnd) {
+      // nested block start
+      if (isNested) {
+        // create identifier if not set
+        if (!blocks[identifier]) {
+          blocks[identifier] = {};
+        }
+
+        // get nested identifier
+        nestedIdentifier = icss.replace("{", "").trim();
+
+        blocks[identifier][nestedIdentifier] = {};
+      }
+
+      const [key, value] = icss.split(":");
+
+      if (key.includes("&")) {
+        continue;
+      }
+
+      if (nestedIdentifier) {
+        blocks[identifier][nestedIdentifier][key] = value;
+      } else {
+        blocks[identifier][key] = value;
+      }
+    } else if (following && icss.includes("&")) {
+      // blocks[identifier] = ;
+    }
+
+    if (isStart) {
+      identifier = icss.replace("{", "").trim();
+
+      if (!blocks[identifier]) {
+        blocks[identifier] = {};
+      }
+
+      following = true;
+    } else if (isEnd) {
+      if (nestedIdentifier) {
+        nestedIdentifier = "";
+      } else {
+        identifier = "";
+      }
+      following = false;
+    }
+  }
+
+  var _css = "";
+  var _addons = "";
+
+  const obj2arr = Object.entries(blocks);
+
+  for (const [key, value] of obj2arr) {
+    console.log(key, ":", value);
+
+    if (_css.length <= 0) {
+      _css = key.trim() + " { ";
+    } else {
+      _css += key.trim() + " {";
+    }
+
+    const o2a = Object.entries(value);
+
+    for (const [a, b] of o2a) {
+      if (typeof b === "object") {
+        _addons += a.replace("&", key) + " {";
+        for (const [k, v] of Object.entries<string>(b)) {
+          _addons += k.trim() + ":" + v.trim();
+        }
+        _addons += "}";
+        continue;
+      }
+      if (a.length > 0 && b.length > 0) {
+        _css += a.trim() + ":" + b.trim();
+      }
+    }
+
+    _css += "}";
+
+    if (!compressed) {
+      _css += "\r\n";
+    }
+  }
+
+  _css += _addons;
+
+  return _css;
+};
+
 const justInTimeInterpreter = (data, indents = 0) => {
   console.time("Interpreter");
 
@@ -237,6 +349,14 @@ const justInTimeInterpreter = (data, indents = 0) => {
       path.resolve(__dirname, "themes/default.gwc"),
       _html.encryptedData || ""
     );
+  }
+
+  // const dataObjects = data.match(/{([a-z]+)}/);
+
+  const state = Object.entries(AppContext.state);
+  for (var [key, value] of state) {
+    console.log(key, ':', value);
+    data = data.replace(`{${key}}`, value);
   }
 
   return data;

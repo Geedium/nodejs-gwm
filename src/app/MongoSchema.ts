@@ -1,5 +1,5 @@
-import { Callback, Db, MongoClient } from 'mongodb';
-import type { AnyError } from "mongodb";
+import { Db, MongoClient } from 'mongodb';
+import type { AnyError, Document, Callback } from "mongodb";
 
 interface Query {
     collection: string;

@@ -1,0 +1,30 @@
+a {
+  color: #a3a3a3;
+
+  &:hover {
+    color: #f3f3f3;
+  }
+}
+
+body {
+  background: #6d6c6c;
+}
+
+.index {
+  background-color: #a3a3a3;
+}
+
+.wrap {
+  margin-left: 101px;
+}
+
+.btn {
+  background: transparent;
+  border: 1px solid #e4e4e4;
+  border-radius: 30px;
+  padding: .78rem;
+  &:hover {
+    cursor: pointer;
+    background: #e1e1e1;
+  }
+}

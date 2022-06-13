@@ -1,0 +1,10 @@
+{
+  "name": "g.com",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "license": "MIT",
+  "dependencies": {
+    "@geedium-org/nodejs-gwm": "N:\\custom_framework"
+  }
+}

@@ -3,6 +3,9 @@
         "baseUrl": ".",
         "target": "ES2015",
         "module": "ESNext",
+        "lib": [
+            "ES2021.String"
+        ],
         "rootDir": "./src",
         "outDir": "dist",
         "moduleResolution": "node",

@@ -28,7 +28,7 @@ function decrypt(text) {
   return decrypted.toString();
 }
 
-class AppContext {
+export class AppContext {
   static state = {};
 
   static add(key, value) {
@@ -225,6 +225,8 @@ const justInTimeInterpreter = (data, indents = 0) => {
       _html.encryptedData || ""
     );
   }
+
+  const dataObjects = data.match(/{([a-z]+)}/);
 
   return data;
 };
