@@ -1,0 +1,86 @@
+<Html>
+    <Head>
+        <link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css" />
+        <script src="./builder.js"></script>
+        <style>
+            #mydiv {
+                position: absolute;
+            }
+            .dashed {
+                border: 1px dashed white;
+            }
+            .btn {
+                padding: .5rem 2rem;
+                background: #0009;
+                color: white;
+            }
+            #mydiv2 {
+                position: absolute;
+                left: 120px;
+                border: 1px dashed white;
+                padding: .5rem 2rem;
+                background: #0009;
+                color: white;
+            }
+            #mydiv:hover {
+                cursor: grab;
+            }
+            #mydiv:active:hover {
+                cursor: grabbing;
+            }
+            body {
+                height: 100vh;
+            }
+            .h-50 {
+                position: relative;
+                height: 50%;
+            }
+            .toolbar {
+                height: 40px;
+                background: #f3f3f3;
+                border-bottom: 2px solid #737373;
+            }
+            #builder {
+                position: fixed;
+                background: #a3a3a3;
+                top: 40px;
+                width: 75vw;
+                height: 100%;
+            }
+            .components {
+                background: #e4e4e4;
+                border-left: 2px solid #737373;
+                padding: 10px;
+                position: fixed;
+                top: 40px;
+                left: 75vw;
+                width: calc(100vw - 75vw);
+                height: 100%;
+            }
+        </style>
+    </Head>
+    <Context>
+        <div class="toolbar">
+            <button>Build</button>
+            <button>Source Code</button>
+        </div>
+        <div id="builder">
+
+        </div>
+        <div class="components">
+            <div class="h-50">
+                <div>Components</div>
+                <button>Store</button>
+                <button>Compose</button>
+                <div class="btn dashed" id="mydiv">Button</div>
+                <div id="mydiv2">Typography</div>
+            </div>
+            <div class="h-50">
+                <div>Variables</div>
+                <div>Events</div>
+                <div>Server: {clicks}</div>
+                <div id="cl">Client: loading...</div>
+            </div>
+        </div>
+    </Context>
+</Html>

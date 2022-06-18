@@ -268,8 +268,6 @@ export const scssInterpreter = (data: string, compressed?: boolean) => {
 };
 
 const justInTimeInterpreter = (data, indents = 0) => {
-  console.time("Interpreter");
-
   var _htmlDocument = "<!DOCTYPE html>\n";
   _htmlDocument += "<html>";
 
@@ -359,6 +357,7 @@ const justInTimeInterpreter = (data, indents = 0) => {
     data = data.replace(`{${key}}`, value);
   }
 
+  console.time("Interpreter");
   return data;
 };
 
@@ -510,6 +509,18 @@ export default class Application {
 // Application.get('/a', (req, res) => {
 //   // res.rootRender('themes/default/about.gwm', req, res);
 // });
+
+Application.get("/builder.js", (req, res) => {
+  res.writeHead(200, { "Content-Type": "application/javascript" });
+  res.write(fs.readFileSync(__dirname + "/builder.js", "utf8"));
+  res.end();
+});
+
+Application.get('/builder', (req, res) => {
+  render(path.resolve(__dirname, "builder.gwm"), req, res);
+});
+
+Application.listen(host, 8080);
 
 const db = new Database();
 // console.log(Application.routes);
