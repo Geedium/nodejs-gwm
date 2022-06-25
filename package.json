@@ -12,9 +12,11 @@
     "build": "tsc"
   },
   "dependencies": {
-    "axios": "^0.27.2"
+    "axios": "^0.27.2",
+    "dom-parser": "^0.1.6"
   },
   "devDependencies": {
+    "@types/dom-parser": "^0.1.1",
     "@types/node": "^17.0.39"
   },
   "optionalDependencies": {

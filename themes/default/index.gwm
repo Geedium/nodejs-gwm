@@ -8,6 +8,7 @@
         <button onclick="navigate('')">Home Page</button>
         <button onclick="navigate('about')">About</button>
         <button onclick="navigate('news')">News</button>
+        <Button>Ripple Effect</Button>
         <!-- Client Bundle -->
         <script>
             import axios from 'axios';

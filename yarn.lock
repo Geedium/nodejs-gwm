@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@types/dom-parser@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.npmjs.org/@types/dom-parser/-/dom-parser-0.1.1.tgz#e72d5b2846ce8c2b48b12314c73af458fcbde5df"
+  integrity sha512-/kFdfefUzcrPclXoo86+31GN6Ww/UhzrC4U7eiW/M6mTNOfzgEl8etv7AtmkoelpYDE4EoUAwZIt5x1D693CaA==
+
 "@types/node@*", "@types/node@^17.0.39":
   version "17.0.39"
   resolved "https://registry.npmjs.org/@types/node/-/node-17.0.39.tgz#3652d82e2a16b4ea679d5ea3143b816c91b7e113"
@@ -69,6 +74,11 @@ denque@^2.0.1:
   version "2.0.1"
   resolved "https://registry.npmjs.org/denque/-/denque-2.0.1.tgz#bcef4c1b80dc32efe97515744f21a4229ab8934a"
   integrity sha512-tfiWc6BQLXNLpNiR5iGd0Ocu3P3VpxfzFiqubLgMfhfOw9WyvgJBd46CClNn9k3qfbjvT//0cf7AlYRX/OslMQ==
+
+dom-parser@^0.1.6:
+  version "0.1.6"
+  resolved "https://registry.npmjs.org/dom-parser/-/dom-parser-0.1.6.tgz#696c633b535ab3291424eb5bf58ee426f64632ca"
+  integrity sha512-3nVRKbLEwmGfghLoeT1dxlK/0votalnOfasP+8VCHYDfDuCETY4LeMblfOeqww6XZk2ymZ1Uewy/hVad6Dy3yw==
 
 follow-redirects@^1.14.9:
   version "1.15.1"

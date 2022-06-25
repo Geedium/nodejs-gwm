@@ -10,11 +10,17 @@ import Database from './app/Database.js';
 
 import { fileURLToPath } from 'url';
 
+import Button from './components/Button.js';
+
+import DomParser from 'dom-parser'
+var parser = new DomParser();
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.resolve(path.dirname(__filename), '..');
 
 const host: string = "localhost";
 const port: number = 3000;
+
 
 import * as crypto from 'crypto';
 
@@ -309,6 +315,41 @@ const justInTimeInterpreter = (data, indents = 0) => {
     "<MaterialStyles />",
     `<style>
     body { background: #f2f2f2; }
+    .btn { 
+      border: none;
+      border-radius: 2px;
+      padding: 12px 18px;
+      font-size: 16px;
+      text-transform: uppercase;
+      cursor: pointer;
+      color: white;
+      background-color: #2196f3;
+      box-shadow: 0 0 4px #999;
+      outline: none;
+    }
+    .ripple {
+      background-position: center;
+      transition: background 0.8s;
+    }
+    .ripple:hover {
+        background: #47a7f5 radial-gradient(circle, 
+              transparent 1%, #47a7f5 1%)
+            center/15000%;
+    }
+    .ripple:active {
+        background-color: #6eb9f7;
+        background-size: 100%;
+        transition: background 0s;
+    }
+    .display {
+      display: flex;
+      flex-direction: column;
+      align-content: center;
+      justify-content: center;
+      margin: 0 auto;
+      height: 100vh;
+      max-width: 500px;
+    }
   </style>`.trim()
   );
 
@@ -320,10 +361,33 @@ const justInTimeInterpreter = (data, indents = 0) => {
 
   data = data.replace(body, "");
 
+
+
+  // const attribs = data.matchAll(/([^\r\n\t\f\v= '"]+)(?:=(["'])?((?:.(?!\2?\s+(?:\S+)=|\2))+.)\2?)?/gm);
+  // const groups = [...attribs];
+
+  // console.log(groups[0]);
+
+  // const btns = data.matchAll(/(?:<Button>)(\S+)=["']?((?:.(?!["']?\s+(?:\S+)=|\s*\/?[>"']))+.)["']? (?:<\/Button>)/gm);
+  // const groups = [...btns];
+
+  // for (var i = 0; i < groups.length; i++) {
+  //   console.log('Match: ', groups[i]);
+  //   data = data.replace(groups[i], Button())
+  // }
+
   data = data.replace(
     "<Context>",
     `<body>${body.trim()}<script>DATA = ${AppContext.print()};`.trim()
   );
+
+  const f = data.indexOf("<Button>");
+  const l = data.indexOf("</Button>");
+  const str = data.substring(f, l + 9);
+
+  const props = data.substring(f + 8, l);
+
+  data = data.replace(str, Button({ props }));
 
   data = data.replace("</Context>", `</script></body>`);
 
@@ -356,6 +420,9 @@ const justInTimeInterpreter = (data, indents = 0) => {
     console.log(key, ':', value);
     data = data.replace(`{${key}}`, value);
   }
+
+  // var dom = parser.parseFromString(data);
+  // console.log(dom);
 
   console.time("Interpreter");
   return data;

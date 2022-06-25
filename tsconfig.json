@@ -9,8 +9,10 @@
         "rootDir": "./src",
         "outDir": "dist",
         "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
         "types": [
-            "node"
+            "node",
+            "dom-parser"
         ],
     }
 }
